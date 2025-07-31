@@ -1,0 +1,21 @@
+# Go binaries
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Test binary
+*.test
+
+# Coverage files
+*.out
+
+# Go workspace file
+go.work
+
+# macOS files
+.DS_Store
+
+# Example binaries
+marginal-price-example
+energy-by-technology-example
