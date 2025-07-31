@@ -43,16 +43,16 @@ func main() {
     // Get data for yesterday
     ctx := context.Background()
     yesterday := time.Now().AddDate(0, 0, -1)
-    
+
     data, err := importer.ImportSingleDate(ctx, yesterday)
     if err != nil {
         log.Fatal(err)
     }
 
     priceData := data.(*omiedata.MarginalPriceData)
-    
+
     fmt.Printf("Date: %s\n", priceData.Date.Format("2006-01-02"))
-    
+
     // Print hourly prices
     for hour := 1; hour <= 24; hour++ {
         if price, exists := priceData.SpainPrices[hour]; exists {
@@ -82,16 +82,16 @@ func main() {
 
     ctx := context.Background()
     date := time.Date(2024, 1, 15, 0, 0, 0, 0, time.UTC)
-    
+
     result, err := importer.ImportSingleDate(ctx, date)
     if err != nil {
         log.Fatal(err)
     }
 
     dayData := result.(*omiedata.TechnologyEnergyDay)
-    
+
     fmt.Printf("Energy data for %s:\n", dayData.Date.Format("2006-01-02"))
-    
+
     // Show renewable energy for each hour
     for _, record := range dayData.Records {
         renewable := record.Wind + record.SolarPV + record.SolarThermal + record.Hydro
@@ -169,7 +169,7 @@ type TechnologyEnergy struct {
 ## System Types
 
 - `omiedata.Spain` (1) - Spanish market
-- `omiedata.Portugal` (2) - Portuguese market  
+- `omiedata.Portugal` (2) - Portuguese market
 - `omiedata.Iberian` (9) - Combined Iberian market
 
 ## Error Handling
@@ -242,4 +242,3 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 - Based on the original Python OMIEData library
 - OMIE (Operador del Mercado Ibérico de Energía) for providing the data
-- The Go community for excellent tooling and libraries
