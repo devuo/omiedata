@@ -19,3 +19,6 @@ go.work
 # Example binaries
 marginal-price-example
 energy-by-technology-example
+
+# Claude settings
+.claude/settings.local.json
