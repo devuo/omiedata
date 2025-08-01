@@ -68,6 +68,7 @@ func (p *EnergyByTechnologyParser) ParseReader(reader io.Reader) (interface{}, e
 			continue
 		}
 
+
 		record, err := p.parseDataLine(line, date, system, columnMapping)
 		if err != nil {
 			continue // Skip invalid lines
@@ -127,7 +128,9 @@ func (p *EnergyByTechnologyParser) parseColumnHeaders(lines []string) (map[int]t
 			
 			for j, field := range fields {
 				field = strings.TrimSpace(field)
-				if tech := types.TechnologyTypeFromSpanish(field); tech != types.TechnologyType(field) {
+				// Only add to mapping if it's a recognized technology
+				if _, ok := isKnownTechnology(field); ok {
+					tech := types.TechnologyTypeFromSpanish(field)
 					mapping[j] = tech
 				}
 			}
@@ -153,6 +156,27 @@ func (p *EnergyByTechnologyParser) containsTechnologyNames(fields []string) bool
 	}
 	
 	return false
+}
+
+// isKnownTechnology checks if a field name is a known technology
+func isKnownTechnology(field string) (types.TechnologyType, bool) {
+	knownTechs := map[string]types.TechnologyType{
+		"CARBÓN":                          types.Coal,
+		"FUEL-GAS":                        types.FuelGas,
+		"AUTOPRODUCTOR":                   types.SelfProducer,
+		"NUCLEAR":                         types.Nuclear,
+		"HIDRÁULICA":                      types.Hydro,
+		"CICLO COMBINADO":                 types.CombinedCycle,
+		"EÓLICA":                          types.Wind,
+		"SOLAR TÉRMICA":                   types.ThermalSolar,
+		"SOLAR FOTOVOLTAICA":              types.PhotovoltaicSolar,
+		"COGENERACIÓN/RESIDUOS/MINI HIDRA": types.Residuals,
+		"IMPORTACIÓN INTER.":              types.Import,
+		"IMPORTACIÓN INTER. SIN MIBEL":    types.ImportWithoutMIBEL,
+	}
+	
+	tech, ok := knownTechs[field]
+	return tech, ok
 }
 
 // parseDataLine parses a single data line

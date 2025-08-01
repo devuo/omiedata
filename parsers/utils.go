@@ -14,14 +14,32 @@ import (
 	"github.com/devuo/omiedata/types"
 )
 
-// ParseFloat parses a European-formatted float (comma as decimal separator)
+// ParseFloat parses a European-formatted float (dot as thousands separator, comma as decimal separator)
 func ParseFloat(s string) (float64, error) {
 	if strings.TrimSpace(s) == "" {
 		return math.NaN(), nil
 	}
 	
-	// Replace comma with dot for European format
-	s = strings.Replace(strings.TrimSpace(s), ",", ".", -1)
+	s = strings.TrimSpace(s)
+	
+	// Handle European format: 7.087,2 -> 7087.2
+	// Remove thousands separators (dots) and convert decimal separator (comma) to dot
+	lastCommaIndex := strings.LastIndex(s, ",")
+	if lastCommaIndex != -1 {
+		// Has comma - assume it's the decimal separator
+		beforeComma := strings.Replace(s[:lastCommaIndex], ".", "", -1) // Remove all dots before comma
+		afterComma := s[lastCommaIndex+1:]                             // Everything after comma
+		s = beforeComma + "." + afterComma                             // Combine with dot as decimal
+	} else {
+		// No comma - might just be integer with thousands separators
+		// Check if it looks like a thousands-separated integer
+		if strings.Contains(s, ".") && len(strings.Split(s, ".")) > 2 {
+			// Multiple dots, likely thousands separators: 15.934 -> 15934
+			s = strings.Replace(s, ".", "", -1)
+		}
+		// Single dot is treated as decimal separator (e.g., "3.14")
+	}
+	
 	return strconv.ParseFloat(s, 64)
 }
 
