@@ -2,7 +2,26 @@
 
 A Go library for accessing electricity market data from [OMIE](https://www.omie.es/) (Iberian Peninsula's Electricity Market Operator). This library provides data access for daily market (hourly prices, energy by technology, bid/ask curves) and intra-day market data for Spain and Portugal.
 
-This is a Go port of the [OMIEData Python library](https://github.com/acruzgarcia/OMIEData), designed to provide better performance and easier deployment while maintaining the same functionality.
+This is a Go port of the [OMIEData Python library](https://github.com/acruzgarcia/OMIEData).
+
+## Table of Contents
+
+- [Features](#features)
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+  - [Marginal Prices](#marginal-prices)
+  - [Energy by Technology](#energy-by-technology)
+  - [Date Range Import](#date-range-import)
+- [Configuration](#configuration)
+- [Data Types](#data-types)
+  - [MarginalPriceData](#marginalpricedata)
+  - [TechnologyEnergy](#technologyenergy)
+- [System Types](#system-types)
+- [Error Handling](#error-handling)
+- [Historical Data Format Changes](#historical-data-format-changes)
+- [Examples](#examples)
+- [Testing](#testing)
+- [Acknowledgments](#acknowledgments)
 
 ## Features
 
@@ -10,7 +29,7 @@ This is a Go port of the [OMIEData Python library](https://github.com/acruzgarci
 - **Energy by Technology**: Generation breakdown by source (wind, solar, nuclear, etc.)
 - **Supply/Demand Curves**: Market bid/ask curves (planned)
 - **Intraday Prices**: Prices for the 6 daily adjustment sessions (planned)
-- **Concurrent Downloads**: Fast parallel data fetching
+- **Concurrent Downloads**: Parallel data fetching
 - **Multiple Formats**: Support for historical format changes
 - **Type Safety**: Full Go type safety with proper error handling
 
@@ -201,14 +220,6 @@ The library automatically handles [OMIE](https://www.omie.es/)'s format changes 
 - **2009-2019**: Transition period with format variations
 - **2019+**: Current EUR/MWh format
 
-## Performance
-
-This Go library is significantly faster than the Python equivalent:
-
-- **Concurrent downloads**: 5 parallel connections by default
-- **Streaming parsing**: Low memory usage for large date ranges
-- **Native performance**: 10-50x faster than Python pandas processing
-
 ## Examples
 
 See the [examples](./examples/) directory for complete working examples:
@@ -225,18 +236,6 @@ go test ./...
 ```
 
 The test suite includes sample files from different time periods to ensure compatibility with format changes.
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Add tests for new functionality
-4. Ensure all tests pass
-5. Submit a pull request
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## Acknowledgments
 
