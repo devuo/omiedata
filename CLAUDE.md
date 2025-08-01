@@ -14,7 +14,7 @@ omiedata/
 ├── parsers/         # File parsing logic
 ├── downloaders/     # HTTP download functionality
 ├── importers/       # High-level API combining parsers and downloaders
-├── cmd/            # Example applications
+├── examples/        # Example applications
 └── testdata/       # Sample files for testing
 ```
 
@@ -83,7 +83,7 @@ File patterns:
 3. **Create downloader** in `downloaders/` implementing the `Downloader` interface
 4. **Create importer** in `importers/` combining parser and downloader
 5. **Add tests** using sample files in `testdata/`
-6. **Add example** in `cmd/`
+6. **Add example** in `examples/`
 
 ### Testing
 
@@ -130,9 +130,13 @@ go test ./...
 go test -coverprofile=coverage.out ./...
 go tool cover -html=coverage.out
 
-# Build examples
-go build ./cmd/marginal-price-example
-go build ./cmd/energy-by-technology-example
+# Run examples
+go run ./examples/marginal-price
+go run ./examples/energy-by-technology
+
+# Build examples (optional)
+go build ./examples/marginal-price
+go build ./examples/energy-by-technology
 
 # Format code
 go fmt ./...

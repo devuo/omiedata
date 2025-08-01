@@ -224,8 +224,14 @@ The library automatically handles [OMIE](https://www.omie.es/)'s format changes 
 
 See the [examples](./examples/) directory for complete working examples:
 
-- `marginal_price_example.go` - Basic price data import
-- `energy_by_technology_example.go` - Technology breakdown analysis
+- [`marginal-price/`](./examples/marginal-price/) - Basic price data import
+- [`energy-by-technology/`](./examples/energy-by-technology/) - Technology breakdown analysis
+
+Run examples:
+```bash
+go run ./examples/marginal-price
+go run ./examples/energy-by-technology
+```
 
 ## Testing
 
