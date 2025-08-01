@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when migrating the O
 
 ## Overview
 
-This is a migration project to create a Go library (`omie-go`) that provides the same functionality as the existing Python library (`omie-python`) for accessing OMIE (Iberian Electricity Market Operator) data. The Python library is well-tested and serves as the reference implementation.
+This is a migration project to create a Go library (`omie-go`) that provides the same functionality as the existing Python library (`omie-python`) for accessing [OMIE](https://www.omie.es/) (Iberian Electricity Market Operator) data. The Python library is well-tested and serves as the reference implementation.
 
 ## Migration Strategy
 
@@ -192,7 +192,7 @@ go tool cover -html=coverage.out
 
 ### 8. Common Pitfalls
 
-1. **Hour Indexing**: OMIE uses 1-24, not 0-23
+1. **Hour Indexing**: [OMIE](https://www.omie.es/) uses 1-24, not 0-23
 2. **DST Handling**: Some days have 23 or 25 hours
 3. **Empty Values**: Missing data appears as empty strings
 4. **Format Changes**: Pre-2009 files use different units

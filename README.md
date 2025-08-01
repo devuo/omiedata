@@ -1,8 +1,8 @@
 # OMIEData Go Library
 
-A Go library for accessing electricity market data from OMIE (Iberian Peninsula's Electricity Market Operator). This library provides data access for daily market (hourly prices, energy by technology, bid/ask curves) and intra-day market data for Spain and Portugal.
+A Go library for accessing electricity market data from [OMIE](https://www.omie.es/) (Iberian Peninsula's Electricity Market Operator). This library provides data access for daily market (hourly prices, energy by technology, bid/ask curves) and intra-day market data for Spain and Portugal.
 
-This is a Go port of the [OMIEData Python library](https://github.com/example/omiedata-python), designed to provide better performance and easier deployment while maintaining the same functionality.
+This is a Go port of the [OMIEData Python library](https://github.com/acruzgarcia/OMIEData), designed to provide better performance and easier deployment while maintaining the same functionality.
 
 ## Features
 
@@ -195,7 +195,7 @@ if err != nil {
 
 ## Historical Data Format Changes
 
-The library automatically handles OMIE's format changes over time:
+The library automatically handles [OMIE](https://www.omie.es/)'s format changes over time:
 
 - **Pre-2009**: Prices in Cent/kWh (automatically converted to EUR/MWh)
 - **2009-2019**: Transition period with format variations
@@ -240,5 +240,5 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Acknowledgments
 
-- Based on the original Python OMIEData library
-- OMIE (Operador del Mercado Ibérico de Energía) for providing the data
+- Based on the original [OMIEData Python library](https://github.com/acruzgarcia/OMIEData)
+- [OMIE](https://www.omie.es/) (Operador del Mercado Ibérico de Energía) for providing the data
