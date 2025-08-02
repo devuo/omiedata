@@ -24,7 +24,7 @@ func main() {
 	end := time.Now().AddDate(0, 0, -1) // Yesterday
 	start := end.AddDate(0, 0, -6)      // 7 days ago
 
-	fmt.Printf("Importing marginal price data from %s to %s\n", 
+	fmt.Printf("Importing marginal price data from %s to %s\n",
 		start.Format("2006-01-02"), end.Format("2006-01-02"))
 
 	ctx := context.Background()
@@ -39,10 +39,10 @@ func main() {
 	}
 
 	fmt.Printf("\nSuccessfully imported data for %d days:\n", len(dataList))
-	
+
 	for _, data := range dataList {
 		fmt.Printf("\nDate: %s\n", data.Date.Format("2006-01-02"))
-		
+
 		// Show some sample prices
 		fmt.Println("Spain prices (first 6 hours):")
 		for hour := 1; hour <= 6; hour++ {
@@ -50,7 +50,7 @@ func main() {
 				fmt.Printf("  Hour %2d: %8.2f EUR/MWh\n", hour, price)
 			}
 		}
-		
+
 		// Show energy data if available
 		if len(data.IberianEnergy) > 0 {
 			fmt.Println("Iberian energy (first 3 hours):")
@@ -60,7 +60,7 @@ func main() {
 				}
 			}
 		}
-		
+
 		// Calculate daily average price
 		var totalPrice, totalHours float64
 		for _, price := range data.SpainPrices {

@@ -27,18 +27,18 @@ func (s SystemType) String() string {
 type TechnologyType string
 
 const (
-	Coal                TechnologyType = "COAL"
-	FuelGas             TechnologyType = "FUEL_GAS"
-	SelfProducer        TechnologyType = "SELF_PRODUCER"
-	Nuclear             TechnologyType = "NUCLEAR"
-	Hydro               TechnologyType = "HYDRO"
-	CombinedCycle       TechnologyType = "COMBINED_CYCLE"
-	Wind                TechnologyType = "WIND"
-	ThermalSolar        TechnologyType = "THERMAL_SOLAR"
-	PhotovoltaicSolar   TechnologyType = "PHOTOVOLTAIC_SOLAR"
-	Residuals           TechnologyType = "RESIDUALS"
-	Import              TechnologyType = "IMPORT"
-	ImportWithoutMIBEL  TechnologyType = "IMPORT_WITHOUT_MIBEL"
+	Coal               TechnologyType = "COAL"
+	FuelGas            TechnologyType = "FUEL_GAS"
+	SelfProducer       TechnologyType = "SELF_PRODUCER"
+	Nuclear            TechnologyType = "NUCLEAR"
+	Hydro              TechnologyType = "HYDRO"
+	CombinedCycle      TechnologyType = "COMBINED_CYCLE"
+	Wind               TechnologyType = "WIND"
+	ThermalSolar       TechnologyType = "THERMAL_SOLAR"
+	PhotovoltaicSolar  TechnologyType = "PHOTOVOLTAIC_SOLAR"
+	Residuals          TechnologyType = "RESIDUALS"
+	Import             TechnologyType = "IMPORT"
+	ImportWithoutMIBEL TechnologyType = "IMPORT_WITHOUT_MIBEL"
 )
 
 // NameInFile returns the Spanish name as it appears in OMIE files
@@ -109,12 +109,12 @@ func TechnologyTypeFromSpanish(spanish string) TechnologyType {
 type DataTypeInMarginalPriceFile string
 
 const (
-	PriceSpain                     DataTypeInMarginalPriceFile = "PRICE_SP"
-	PricePortugal                  DataTypeInMarginalPriceFile = "PRICE_PT"
-	EnergyIberian                  DataTypeInMarginalPriceFile = "ENER_IB"
-	EnergyIberianWithBilateral     DataTypeInMarginalPriceFile = "ENER_IB_BILLAT"
-	EnergyBuySpain                 DataTypeInMarginalPriceFile = "ENER_BUY_SP"
-	EnergySellSpain                DataTypeInMarginalPriceFile = "ENER_SELL_SP"
+	PriceSpain                 DataTypeInMarginalPriceFile = "PRICE_SP"
+	PricePortugal              DataTypeInMarginalPriceFile = "PRICE_PT"
+	EnergyIberian              DataTypeInMarginalPriceFile = "ENER_IB"
+	EnergyIberianWithBilateral DataTypeInMarginalPriceFile = "ENER_IB_BILLAT"
+	EnergyBuySpain             DataTypeInMarginalPriceFile = "ENER_BUY_SP"
+	EnergySellSpain            DataTypeInMarginalPriceFile = "ENER_SELL_SP"
 )
 
 // SessionType represents intraday market sessions

@@ -9,7 +9,7 @@ type MarginalPriceDownloader struct {
 func NewMarginalPriceDownloader() *MarginalPriceDownloader {
 	urlMask := "AGNO_YYYY/MES_MM/TXT/INT_PBC_EV_H_1_DD_MM_YYYY_DD_MM_YYYY.TXT"
 	outputMask := "PMD_YYYYMMDD.txt"
-	
+
 	return &MarginalPriceDownloader{
 		GeneralDownloader: NewGeneralDownloader(urlMask, outputMask),
 	}

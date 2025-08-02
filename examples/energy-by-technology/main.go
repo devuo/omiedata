@@ -14,9 +14,9 @@ import (
 func main() {
 	// Create importer for Iberian system with verbose output
 	options := importers.ImportOptions{
-		Verbose: true,
-		MaxRetries: 3,
-		RetryDelay: 2 * time.Second,
+		Verbose:       true,
+		MaxRetries:    3,
+		RetryDelay:    2 * time.Second,
 		MaxConcurrent: 1,
 	}
 	importer := importers.NewEnergyByTechnologyImporter(types.Iberian, options)
@@ -61,7 +61,7 @@ func main() {
 
 		// Calculate total renewable energy
 		renewable := sumNonNaN(record.Wind, record.SolarPV, record.SolarThermal, record.Hydro)
-		total := sumNonNaN(renewable, record.Nuclear, record.CombinedCycle, record.Coal, 
+		total := sumNonNaN(renewable, record.Nuclear, record.CombinedCycle, record.Coal,
 			record.FuelGas, record.Cogeneration, record.SelfProducer)
 
 		if total > 0 && !math.IsNaN(renewable) {

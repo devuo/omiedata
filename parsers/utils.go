@@ -19,17 +19,17 @@ func ParseFloat(s string) (float64, error) {
 	if strings.TrimSpace(s) == "" {
 		return math.NaN(), nil
 	}
-	
+
 	s = strings.TrimSpace(s)
-	
+
 	// Handle European format: 7.087,2 -> 7087.2
 	// Remove thousands separators (dots) and convert decimal separator (comma) to dot
 	lastCommaIndex := strings.LastIndex(s, ",")
 	if lastCommaIndex != -1 {
 		// Has comma - assume it's the decimal separator
 		beforeComma := strings.Replace(s[:lastCommaIndex], ".", "", -1) // Remove all dots before comma
-		afterComma := s[lastCommaIndex+1:]                             // Everything after comma
-		s = beforeComma + "." + afterComma                             // Combine with dot as decimal
+		afterComma := s[lastCommaIndex+1:]                              // Everything after comma
+		s = beforeComma + "." + afterComma                              // Combine with dot as decimal
 	} else {
 		// No comma - might just be integer with thousands separators
 		// Check if it looks like a thousands-separated integer
@@ -39,7 +39,7 @@ func ParseFloat(s string) (float64, error) {
 		}
 		// Single dot is treated as decimal separator (e.g., "3.14")
 	}
-	
+
 	return strconv.ParseFloat(s, 64)
 }
 
@@ -58,15 +58,15 @@ func NewISO88591Reader(r io.Reader) io.Reader {
 func ReadLines(reader io.Reader) ([]string, error) {
 	var lines []string
 	scanner := bufio.NewScanner(reader)
-	
+
 	for scanner.Scan() {
 		lines = append(lines, scanner.Text())
 	}
-	
+
 	if err := scanner.Err(); err != nil {
 		return nil, types.NewOMIEError(types.ErrCodeParse, "failed to read lines", err)
 	}
-	
+
 	return lines, nil
 }
 
@@ -80,7 +80,7 @@ func FindDatesInString(s string) []string {
 	// Simple regex-like approach for DD/MM/YYYY pattern
 	var dates []string
 	words := strings.Fields(s)
-	
+
 	for _, word := range words {
 		// Check if word matches DD/MM/YYYY pattern
 		if len(word) == 10 && word[2] == '/' && word[5] == '/' {
@@ -89,7 +89,7 @@ func FindDatesInString(s string) []string {
 			}
 		}
 	}
-	
+
 	return dates
 }
 
@@ -99,16 +99,16 @@ func ParseHour(s string) (int, error) {
 	if s == "" {
 		return 0, types.NewOMIEError(types.ErrCodeParse, "empty hour value", nil)
 	}
-	
+
 	hour, err := strconv.Atoi(s)
 	if err != nil {
 		return 0, types.NewOMIEError(types.ErrCodeParse, "invalid hour format", err)
 	}
-	
+
 	if hour < 1 || hour > 25 { // Allow 25 for DST changes
 		return 0, types.NewOMIEError(types.ErrCodeParse, "hour out of range (1-25)", nil)
 	}
-	
+
 	return hour, nil
 }
 

@@ -20,7 +20,7 @@ type MarginalPriceImporter struct {
 // NewMarginalPriceImporter creates a new marginal price importer
 func NewMarginalPriceImporter(options ImportOptions) *MarginalPriceImporter {
 	downloader := downloaders.NewMarginalPriceDownloader()
-	
+
 	// Configure downloader
 	config := downloaders.DownloadConfig{
 		MaxRetries:     options.MaxRetries,
@@ -29,7 +29,7 @@ func NewMarginalPriceImporter(options ImportOptions) *MarginalPriceImporter {
 		MaxConcurrent:  options.MaxConcurrent,
 	}
 	downloader.SetConfig(config)
-	
+
 	return &MarginalPriceImporter{
 		downloader: downloader,
 		parser:     parsers.NewMarginalPriceParser(),
@@ -50,34 +50,34 @@ func NewDefaultMarginalPriceImporter() *MarginalPriceImporter {
 // Import downloads and parses marginal price data for a date range
 func (i *MarginalPriceImporter) Import(ctx context.Context, start, end time.Time) (interface{}, error) {
 	responseChan := i.downloader.URLResponses(ctx, start, end, i.options.Verbose)
-	
+
 	var results []*types.MarginalPriceData
 	var errors []error
-	
+
 	for result := range responseChan {
 		if result.Error != nil {
 			errors = append(errors, result.Error)
 			continue
 		}
-		
+
 		// Parse the response
 		parsed, err := i.parser.ParseResponse(result.Response)
 		result.Response.Body.Close()
-		
+
 		if err != nil {
 			errors = append(errors, fmt.Errorf("parse error for %s: %w", result.Date.Format("2006-01-02"), err))
 			continue
 		}
-		
+
 		if data, ok := parsed.(*types.MarginalPriceData); ok {
 			results = append(results, data)
 		}
 	}
-	
+
 	if len(results) == 0 && len(errors) > 0 {
 		return nil, fmt.Errorf("no data imported, %d errors occurred: %v", len(errors), errors[0])
 	}
-	
+
 	return results, nil
 }
 
@@ -87,11 +87,11 @@ func (i *MarginalPriceImporter) ImportSingleDate(ctx context.Context, date time.
 	if err != nil {
 		return nil, err
 	}
-	
+
 	if dataList, ok := results.([]*types.MarginalPriceData); ok && len(dataList) > 0 {
 		return dataList[0], nil
 	}
-	
+
 	return nil, types.NewOMIEError(types.ErrCodeNotFound, "no data found for date", nil)
 }
 
@@ -102,14 +102,14 @@ func (i *MarginalPriceImporter) ImportToDataFrame(ctx context.Context, start, en
 	if err != nil {
 		return nil, err
 	}
-	
+
 	dataList, ok := results.([]*types.MarginalPriceData)
 	if !ok {
 		return nil, types.NewOMIEError(types.ErrCodeParse, "unexpected result type", nil)
 	}
-	
+
 	var records []types.MarginalPriceRecord
-	
+
 	for _, data := range dataList {
 		// Convert to flattened records
 		if len(data.SpainPrices) > 0 {
@@ -119,7 +119,7 @@ func (i *MarginalPriceImporter) ImportToDataFrame(ctx context.Context, start, en
 				Values:  data.SpainPrices,
 			})
 		}
-		
+
 		if len(data.PortugalPrices) > 0 {
 			records = append(records, types.MarginalPriceRecord{
 				Date:    data.Date,
@@ -127,7 +127,7 @@ func (i *MarginalPriceImporter) ImportToDataFrame(ctx context.Context, start, en
 				Values:  data.PortugalPrices,
 			})
 		}
-		
+
 		if len(data.IberianEnergy) > 0 {
 			records = append(records, types.MarginalPriceRecord{
 				Date:    data.Date,
@@ -135,7 +135,7 @@ func (i *MarginalPriceImporter) ImportToDataFrame(ctx context.Context, start, en
 				Values:  data.IberianEnergy,
 			})
 		}
-		
+
 		if len(data.BilateralEnergy) > 0 {
 			records = append(records, types.MarginalPriceRecord{
 				Date:    data.Date,
@@ -143,7 +143,7 @@ func (i *MarginalPriceImporter) ImportToDataFrame(ctx context.Context, start, en
 				Values:  data.BilateralEnergy,
 			})
 		}
-		
+
 		if len(data.SpainBuyEnergy) > 0 {
 			records = append(records, types.MarginalPriceRecord{
 				Date:    data.Date,
@@ -151,7 +151,7 @@ func (i *MarginalPriceImporter) ImportToDataFrame(ctx context.Context, start, en
 				Values:  data.SpainBuyEnergy,
 			})
 		}
-		
+
 		if len(data.SpainSellEnergy) > 0 {
 			records = append(records, types.MarginalPriceRecord{
 				Date:    data.Date,
@@ -160,6 +160,6 @@ func (i *MarginalPriceImporter) ImportToDataFrame(ctx context.Context, start, en
 			})
 		}
 	}
-	
+
 	return records, nil
 }

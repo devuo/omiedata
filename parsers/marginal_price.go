@@ -29,7 +29,7 @@ func NewMarginalPriceParser(conceptsToLoad ...types.DataTypeInMarginalPriceFile)
 			types.EnergySellSpain,
 		}
 	}
-	
+
 	return &MarginalPriceParser{
 		conceptsToLoad: conceptsToLoad,
 	}
@@ -104,7 +104,7 @@ func (p *MarginalPriceParser) parseDateFromHeader(headerLine string) (time.Time,
 	// Use regex to find dates in DD/MM/YYYY format
 	dateRegex := regexp.MustCompile(`\d{2}/\d{2}/\d{4}`)
 	matches := dateRegex.FindAllString(headerLine, -1)
-	
+
 	if len(matches) < 2 {
 		return time.Time{}, types.NewOMIEError(types.ErrCodeParse, "expected at least 2 dates in header", nil)
 	}
@@ -121,7 +121,7 @@ func (p *MarginalPriceParser) parseDataLine(line string, date time.Time) (*types
 	}
 
 	concept := strings.TrimSpace(fields[0])
-	
+
 	// Map Spanish concepts to our enum types
 	conceptType, multiplier := p.mapConcept(concept)
 	if conceptType == "" {
@@ -136,7 +136,7 @@ func (p *MarginalPriceParser) parseDataLine(line string, date time.Time) (*types
 			break
 		}
 	}
-	
+
 	if !shouldLoad {
 		return nil, nil
 	}
@@ -147,7 +147,7 @@ func (p *MarginalPriceParser) parseDataLine(line string, date time.Time) (*types
 		if i >= 25 { // Maximum 25 hours (for DST)
 			break
 		}
-		
+
 		hour := i + 1 // Hours are 1-based
 		if strings.TrimSpace(field) == "" {
 			continue // Skip empty values
@@ -173,26 +173,26 @@ func (p *MarginalPriceParser) parseDataLine(line string, date time.Time) (*types
 func (p *MarginalPriceParser) mapConcept(concept string) (types.DataTypeInMarginalPriceFile, float64) {
 	conceptMap := map[string][2]interface{}{
 		// Old format (Cent/kWh) - multiply by 10 to get EUR/MWh
-		"Precio marginal (Cent/kWh)": {types.PriceSpain, 10.0},
-		"Precio marginal en el sistema español (Cent/kWh)": {types.PriceSpain, 10.0},
+		"Precio marginal (Cent/kWh)":                         {types.PriceSpain, 10.0},
+		"Precio marginal en el sistema español (Cent/kWh)":   {types.PriceSpain, 10.0},
 		"Precio marginal en el sistema portugués (Cent/kWh)": {types.PricePortugal, 10.0},
-		
+
 		// New format (EUR/MWh)
-		"Precio marginal (EUR/MWh)": {types.PriceSpain, 1.0},
-		"Precio marginal en el sistema español (EUR/MWh)": {types.PriceSpain, 1.0},
+		"Precio marginal (EUR/MWh)":                         {types.PriceSpain, 1.0},
+		"Precio marginal en el sistema español (EUR/MWh)":   {types.PriceSpain, 1.0},
 		"Precio marginal en el sistema portugués (EUR/MWh)": {types.PricePortugal, 1.0},
-		
+
 		// Adjustment prices (also map to Spain/Portugal prices)
-		"Precio de ajuste en el sistema español (EUR/MWh)": {types.PriceSpain, 1.0},
+		"Precio de ajuste en el sistema español (EUR/MWh)":   {types.PriceSpain, 1.0},
 		"Precio de ajuste en el sistema portugués (EUR/MWh)": {types.PricePortugal, 1.0},
-		
+
 		// Energy concepts
 		"Demanda+bombeos (MWh)": {types.EnergyIberian, 1.0},
-		"Energía en el programa resultante de la casación (MWh)": {types.EnergyIberian, 1.0},
-		"Energía total del mercado Ibérico (MWh)": {types.EnergyIberian, 1.0},
-		"Energía total con bilaterales del mercado Ibérico (MWh)": {types.EnergyIberianWithBilateral, 1.0},
-		"Energía total de compra sistema español (MWh)": {types.EnergyBuySpain, 1.0},
-		"Energía total de venta sistema español (MWh)": {types.EnergySellSpain, 1.0},
+		"Energía en el programa resultante de la casación (MWh)":                       {types.EnergyIberian, 1.0},
+		"Energía total del mercado Ibérico (MWh)":                                      {types.EnergyIberian, 1.0},
+		"Energía total con bilaterales del mercado Ibérico (MWh)":                      {types.EnergyIberianWithBilateral, 1.0},
+		"Energía total de compra sistema español (MWh)":                                {types.EnergyBuySpain, 1.0},
+		"Energía total de venta sistema español (MWh)":                                 {types.EnergySellSpain, 1.0},
 		"Energía horaria sujeta al mecanismo de ajuste a los consumidores MIBEL (MWh)": {types.EnergyIberian, 1.0},
 	}
 

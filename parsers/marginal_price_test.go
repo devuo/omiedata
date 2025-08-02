@@ -10,12 +10,12 @@ import (
 
 func TestMarginalPriceParser_ParseFile(t *testing.T) {
 	tests := []struct {
-		name           string
-		filename       string
-		expectedDate   time.Time
-		expectedHours  int
-		wantErr        bool
-		validateFunc   func(t *testing.T, data *types.MarginalPriceData)
+		name          string
+		filename      string
+		expectedDate  time.Time
+		expectedHours int
+		wantErr       bool
+		validateFunc  func(t *testing.T, data *types.MarginalPriceData)
 	}{
 		{
 			name:          "parse old format file - 2006 Cent/kWh",
@@ -47,7 +47,7 @@ func TestMarginalPriceParser_ParseFile(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			parser := NewMarginalPriceParser()
 			result, err := parser.ParseFile(tt.filename)
-			
+
 			if tt.wantErr {
 				if err == nil {
 					t.Errorf("expected error but got none")
@@ -81,7 +81,7 @@ func TestMarginalPriceParser_ParseFile(t *testing.T) {
 				t.Errorf("expected %d hours, got %d", tt.expectedHours, spainHours)
 			}
 
-			t.Logf("Parsed data for %s with %d Spain prices", 
+			t.Logf("Parsed data for %s with %d Spain prices",
 				data.Date.Format("2006-01-02"), len(data.SpainPrices))
 
 			// Print first few hours for debugging
@@ -102,9 +102,9 @@ func TestMarginalPriceParser_ParseFile(t *testing.T) {
 func validate2006Format(t *testing.T, data *types.MarginalPriceData) {
 	// 2006 format: Single price line in Cent/kWh, should be converted to EUR/MWh
 	// From testdata: Precio marginal (Cent/kWh);  6,694;  4,888;  4,525;  4,371;...
-	
+
 	expectedPrices := map[int]float64{
-		1:  66.94, // 6,694 cent/kWh -> 66.94 EUR/MWh  
+		1:  66.94, // 6,694 cent/kWh -> 66.94 EUR/MWh
 		2:  48.88, // 4,888 cent/kWh -> 48.88 EUR/MWh
 		3:  45.25, // 4,525 cent/kWh -> 45.25 EUR/MWh
 		4:  43.71, // 4,371 cent/kWh -> 43.71 EUR/MWh
@@ -115,7 +115,7 @@ func validate2006Format(t *testing.T, data *types.MarginalPriceData) {
 		if actualPrice, exists := data.SpainPrices[hour]; !exists {
 			t.Errorf("missing Spain price for hour %d", hour)
 		} else if math.Abs(actualPrice-expectedPrice) > 0.01 {
-			t.Errorf("hour %d Spain price: expected %.2f EUR/MWh, got %.2f EUR/MWh", 
+			t.Errorf("hour %d Spain price: expected %.2f EUR/MWh, got %.2f EUR/MWh",
 				hour, expectedPrice, actualPrice)
 		}
 	}
@@ -142,7 +142,7 @@ func validate2006Format(t *testing.T, data *types.MarginalPriceData) {
 		if energy, exists := data.SpainBuyEnergy[hour]; exists && math.Abs(energy-expectedEng) < 0.1 {
 			found = true
 		}
-		
+
 		if !found {
 			t.Errorf("hour %d: expected energy value %.3f MWh not found in any energy field", hour, expectedEng)
 		}
@@ -153,10 +153,10 @@ func validate2006Format(t *testing.T, data *types.MarginalPriceData) {
 
 func validate2009Format(t *testing.T, data *types.MarginalPriceData) {
 	// 2009 format: Separate Spain and Portugal prices in Cent/kWh
-	// From testdata: 
+	// From testdata:
 	// Precio marginal en el sistema español (Cent/kWh);  3,997;  3,760;  3,560;...
 	// Precio marginal en el sistema portugués (Cent/kWh);  3,997;  3,760;  3,731;...
-	
+
 	expectedSpainPrices := map[int]float64{
 		1:  39.97, // 3,997 cent/kWh -> 39.97 EUR/MWh
 		2:  37.60, // 3,760 cent/kWh -> 37.60 EUR/MWh
@@ -176,7 +176,7 @@ func validate2009Format(t *testing.T, data *types.MarginalPriceData) {
 		if actualPrice, exists := data.SpainPrices[hour]; !exists {
 			t.Errorf("missing Spain price for hour %d", hour)
 		} else if math.Abs(actualPrice-expectedPrice) > 0.01 {
-			t.Errorf("hour %d Spain price: expected %.2f EUR/MWh, got %.2f EUR/MWh", 
+			t.Errorf("hour %d Spain price: expected %.2f EUR/MWh, got %.2f EUR/MWh",
 				hour, expectedPrice, actualPrice)
 		}
 	}
@@ -190,7 +190,7 @@ func validate2009Format(t *testing.T, data *types.MarginalPriceData) {
 		if actualPrice, exists := data.PortugalPrices[hour]; !exists {
 			t.Errorf("missing Portugal price for hour %d", hour)
 		} else if math.Abs(actualPrice-expectedPrice) > 0.01 {
-			t.Errorf("hour %d Portugal price: expected %.2f EUR/MWh, got %.2f EUR/MWh", 
+			t.Errorf("hour %d Portugal price: expected %.2f EUR/MWh, got %.2f EUR/MWh",
 				hour, expectedPrice, actualPrice)
 		}
 	}
@@ -198,16 +198,16 @@ func validate2009Format(t *testing.T, data *types.MarginalPriceData) {
 	// Validate energy data with European number format
 	// From testdata: Energía total de compra sistema español (MWh);  24326,2;  22477,4;...
 	expectedSpainBuyEnergy := map[int]float64{
-		1:  24326.2, // 24326,2 -> 24326.2 (comma as decimal separator)
-		2:  22477.4, // 22477,4 -> 22477.4
-		3:  21142.8, // 21142,8 -> 21142.8
+		1: 24326.2, // 24326,2 -> 24326.2 (comma as decimal separator)
+		2: 22477.4, // 22477,4 -> 22477.4
+		3: 21142.8, // 21142,8 -> 21142.8
 	}
 
 	for hour, expectedEng := range expectedSpainBuyEnergy {
 		if energy, exists := data.SpainBuyEnergy[hour]; !exists {
 			t.Errorf("missing Spain buy energy for hour %d", hour)
 		} else if math.Abs(energy-expectedEng) > 0.1 {
-			t.Errorf("hour %d Spain buy energy: expected %.1f MWh, got %.1f MWh", 
+			t.Errorf("hour %d Spain buy energy: expected %.1f MWh, got %.1f MWh",
 				hour, expectedEng, energy)
 		}
 	}
@@ -230,7 +230,7 @@ func validate2022Format(t *testing.T, data *types.MarginalPriceData) {
 		if price, exists := data.SpainPrices[hour]; !exists {
 			t.Errorf("missing Spain price for hour %d on DST day", hour)
 		} else if price != 0.0 {
-			t.Errorf("hour %d adjustment price: expected 0.00 EUR/MWh, got %.2f EUR/MWh", 
+			t.Errorf("hour %d adjustment price: expected 0.00 EUR/MWh, got %.2f EUR/MWh",
 				hour, price)
 		}
 	}
@@ -239,7 +239,7 @@ func validate2022Format(t *testing.T, data *types.MarginalPriceData) {
 	if len(data.PortugalPrices) > 0 {
 		for hour := 1; hour <= 25; hour++ {
 			if price, exists := data.PortugalPrices[hour]; exists && price != 0.0 {
-				t.Errorf("hour %d Portugal adjustment price: expected 0.00 EUR/MWh, got %.2f EUR/MWh", 
+				t.Errorf("hour %d Portugal adjustment price: expected 0.00 EUR/MWh, got %.2f EUR/MWh",
 					hour, price)
 			}
 		}
@@ -250,10 +250,10 @@ func validate2022Format(t *testing.T, data *types.MarginalPriceData) {
 
 func TestMarginalPriceParser_DateParsing(t *testing.T) {
 	parser := NewMarginalPriceParser()
-	
+
 	// Test date parsing from header
 	headerLine := "OMIE - Mercado de electricidad;Fecha Emisión :01/01/2006 - 08:30;;01/01/2006;Precio del mercado diario (Cent/kWh);;;;"
-	
+
 	date, err := parser.parseDateFromHeader(headerLine)
 	if err != nil {
 		t.Errorf("failed to parse date: %v", err)

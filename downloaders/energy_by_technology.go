@@ -20,7 +20,7 @@ type EnergyByTechnologyDownloader struct {
 func NewEnergyByTechnologyDownloader(systemType types.SystemType) *EnergyByTechnologyDownloader {
 	urlMask := "AGNO_YYYY/MES_MM/TXT/INT_PBC_TECNOLOGIAS_H_SYS_DD_MM_YYYY_DD_MM_YYYY.TXT"
 	outputMask := "EnergyByTechnology_SYS_YYYYMMDD.TXT"
-	
+
 	return &EnergyByTechnologyDownloader{
 		GeneralDownloader: NewGeneralDownloader(urlMask, outputMask),
 		systemType:        systemType,
@@ -31,10 +31,10 @@ func NewEnergyByTechnologyDownloader(systemType types.SystemType) *EnergyByTechn
 func (d *EnergyByTechnologyDownloader) URLResponses(ctx context.Context, dateIni, dateEnd time.Time, verbose bool) <-chan ResponseResult {
 	// Override to use custom URL generation
 	resultChan := make(chan ResponseResult)
-	
+
 	go func() {
 		defer close(resultChan)
-		
+
 		for date := dateIni; !date.After(dateEnd); date = date.AddDate(0, 0, 1) {
 			select {
 			case <-ctx.Done():
@@ -45,14 +45,14 @@ func (d *EnergyByTechnologyDownloader) URLResponses(ctx context.Context, dateIni
 			}
 		}
 	}()
-	
+
 	return resultChan
 }
 
 // downloadSingleDate downloads data for a single date with custom URL generation
 func (d *EnergyByTechnologyDownloader) downloadSingleDate(ctx context.Context, date time.Time, verbose bool) ResponseResult {
 	url := d.generateURL(date)
-	
+
 	var lastErr error
 	for attempt := 0; attempt <= d.GeneralDownloader.config.MaxRetries; attempt++ {
 		if attempt > 0 {
@@ -62,7 +62,7 @@ func (d *EnergyByTechnologyDownloader) downloadSingleDate(ctx context.Context, d
 			case <-time.After(d.GeneralDownloader.config.RetryDelay * time.Duration(attempt)):
 			}
 		}
-		
+
 		if verbose {
 			if attempt > 0 {
 				fmt.Printf("Retrying (%d/%d) %s...\n", attempt, d.GeneralDownloader.config.MaxRetries, url)
@@ -70,23 +70,23 @@ func (d *EnergyByTechnologyDownloader) downloadSingleDate(ctx context.Context, d
 				fmt.Printf("Requesting %s...\n", url)
 			}
 		}
-		
+
 		req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 		if err != nil {
 			lastErr = err
 			continue
 		}
-		
+
 		resp, err := d.GeneralDownloader.client.Do(req)
 		if err != nil {
 			lastErr = err
 			continue
 		}
-		
+
 		if resp.StatusCode == http.StatusOK {
 			return ResponseResult{Response: resp, Date: date, URL: url}
 		}
-		
+
 		resp.Body.Close()
 		if resp.StatusCode == http.StatusNotFound {
 			lastErr = types.NewOMIEError(types.ErrCodeNotFound, fmt.Sprintf("data not available for date %s", date.Format("2006-01-02")), nil)
@@ -94,7 +94,7 @@ func (d *EnergyByTechnologyDownloader) downloadSingleDate(ctx context.Context, d
 			lastErr = types.NewOMIEError(types.ErrCodeNetwork, fmt.Sprintf("HTTP %d", resp.StatusCode), nil)
 		}
 	}
-	
+
 	return ResponseResult{
 		Date:  date,
 		URL:   url,

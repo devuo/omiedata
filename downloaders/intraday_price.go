@@ -18,7 +18,7 @@ type IntradayPriceDownloader struct {
 func NewIntradayPriceDownloader(session types.SessionType) *IntradayPriceDownloader {
 	urlMask := "AGNO_YYYY/MES_MM/TXT/INT_PIB_EV_H_1_SS_DD_MM_YYYY_DD_MM_YYYY.TXT"
 	outputMask := "PrecioIntra_SS_YYYYMMDD.txt"
-	
+
 	return &IntradayPriceDownloader{
 		GeneralDownloader: NewGeneralDownloader(urlMask, outputMask),
 		session:           session,

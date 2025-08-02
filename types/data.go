@@ -28,21 +28,21 @@ func NewMarginalPriceData(date time.Time) *MarginalPriceData {
 
 // TechnologyEnergy contains energy generation by technology for a specific hour
 type TechnologyEnergy struct {
-	Date              time.Time
-	Hour              int
-	System            SystemType
-	Coal              float64 // MWh
-	FuelGas           float64 // MWh
-	SelfProducer      float64 // MWh
-	Nuclear           float64 // MWh
-	Hydro             float64 // MWh
-	CombinedCycle     float64 // MWh
-	Wind              float64 // MWh
-	SolarThermal      float64 // MWh
-	SolarPV           float64 // MWh
-	Cogeneration      float64 // MWh (includes residuals and mini-hydro)
-	ImportInt         float64 // MWh
-	ImportNoMIBEL     float64 // MWh
+	Date          time.Time
+	Hour          int
+	System        SystemType
+	Coal          float64 // MWh
+	FuelGas       float64 // MWh
+	SelfProducer  float64 // MWh
+	Nuclear       float64 // MWh
+	Hydro         float64 // MWh
+	CombinedCycle float64 // MWh
+	Wind          float64 // MWh
+	SolarThermal  float64 // MWh
+	SolarPV       float64 // MWh
+	Cogeneration  float64 // MWh (includes residuals and mini-hydro)
+	ImportInt     float64 // MWh
+	ImportNoMIBEL float64 // MWh
 }
 
 // MarketPoint represents a single point in the supply/demand curve
@@ -62,13 +62,13 @@ type MarketCurve struct {
 
 // IntradayPrice contains intraday session prices
 type IntradayPrice struct {
-	Date            time.Time
-	Session         SessionType
-	Hour            int
-	SpainPrice      float64 // EUR/MWh
-	PortugalPrice   float64 // EUR/MWh
-	SpainEnergy     float64 // MWh
-	PortugalEnergy  float64 // MWh
+	Date           time.Time
+	Session        SessionType
+	Hour           int
+	SpainPrice     float64 // EUR/MWh
+	PortugalPrice  float64 // EUR/MWh
+	SpainEnergy    float64 // MWh
+	PortugalEnergy float64 // MWh
 }
 
 // MarginalPriceRecord represents a single record from marginal price file parsing

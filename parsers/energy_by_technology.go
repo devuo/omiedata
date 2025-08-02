@@ -68,7 +68,6 @@ func (p *EnergyByTechnologyParser) ParseReader(reader io.Reader) (interface{}, e
 			continue
 		}
 
-
 		record, err := p.parseDataLine(line, date, system, columnMapping)
 		if err != nil {
 			continue // Skip invalid lines
@@ -93,7 +92,7 @@ func (p *EnergyByTechnologyParser) parseHeader(headerLine string) (time.Time, ty
 	// Extract date
 	dateRegex := regexp.MustCompile(`\d{2}/\d{2}/\d{4}`)
 	dateMatches := dateRegex.FindAllString(headerLine, -1)
-	
+
 	if len(dateMatches) == 0 {
 		return time.Time{}, 0, types.NewOMIEError(types.ErrCodeParse, "no date found in header", nil)
 	}
@@ -125,7 +124,7 @@ func (p *EnergyByTechnologyParser) parseColumnHeaders(lines []string) (map[int]t
 		// Check if this looks like a header line (contains technology names)
 		if p.containsTechnologyNames(fields) {
 			mapping := make(map[int]types.TechnologyType)
-			
+
 			for j, field := range fields {
 				field = strings.TrimSpace(field)
 				// Only add to mapping if it's a recognized technology
@@ -134,18 +133,18 @@ func (p *EnergyByTechnologyParser) parseColumnHeaders(lines []string) (map[int]t
 					mapping[j] = tech
 				}
 			}
-			
+
 			return mapping, i
 		}
 	}
-	
+
 	return nil, -1
 }
 
 // containsTechnologyNames checks if fields contain technology names
 func (p *EnergyByTechnologyParser) containsTechnologyNames(fields []string) bool {
 	knownTechs := []string{"CARBÓN", "NUCLEAR", "EÓLICA", "SOLAR", "HIDRÁULICA"}
-	
+
 	for _, field := range fields {
 		field = strings.TrimSpace(strings.ToUpper(field))
 		for _, tech := range knownTechs {
@@ -154,27 +153,27 @@ func (p *EnergyByTechnologyParser) containsTechnologyNames(fields []string) bool
 			}
 		}
 	}
-	
+
 	return false
 }
 
 // isKnownTechnology checks if a field name is a known technology
 func isKnownTechnology(field string) (types.TechnologyType, bool) {
 	knownTechs := map[string]types.TechnologyType{
-		"CARBÓN":                          types.Coal,
-		"FUEL-GAS":                        types.FuelGas,
-		"AUTOPRODUCTOR":                   types.SelfProducer,
-		"NUCLEAR":                         types.Nuclear,
-		"HIDRÁULICA":                      types.Hydro,
-		"CICLO COMBINADO":                 types.CombinedCycle,
-		"EÓLICA":                          types.Wind,
-		"SOLAR TÉRMICA":                   types.ThermalSolar,
-		"SOLAR FOTOVOLTAICA":              types.PhotovoltaicSolar,
+		"CARBÓN":                           types.Coal,
+		"FUEL-GAS":                         types.FuelGas,
+		"AUTOPRODUCTOR":                    types.SelfProducer,
+		"NUCLEAR":                          types.Nuclear,
+		"HIDRÁULICA":                       types.Hydro,
+		"CICLO COMBINADO":                  types.CombinedCycle,
+		"EÓLICA":                           types.Wind,
+		"SOLAR TÉRMICA":                    types.ThermalSolar,
+		"SOLAR FOTOVOLTAICA":               types.PhotovoltaicSolar,
 		"COGENERACIÓN/RESIDUOS/MINI HIDRA": types.Residuals,
-		"IMPORTACIÓN INTER.":              types.Import,
-		"IMPORTACIÓN INTER. SIN MIBEL":    types.ImportWithoutMIBEL,
+		"IMPORTACIÓN INTER.":               types.Import,
+		"IMPORTACIÓN INTER. SIN MIBEL":     types.ImportWithoutMIBEL,
 	}
-	
+
 	tech, ok := knownTechs[field]
 	return tech, ok
 }

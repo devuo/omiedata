@@ -20,10 +20,10 @@ const (
 
 // GeneralDownloader implements the base functionality for OMIE downloaders
 type GeneralDownloader struct {
-	urlMask     string
-	outputMask  string
-	client      *http.Client
-	config      DownloadConfig
+	urlMask    string
+	outputMask string
+	client     *http.Client
+	config     DownloadConfig
 }
 
 // NewGeneralDownloader creates a new GeneralDownloader
@@ -63,7 +63,7 @@ func (d *GeneralDownloader) DownloadData(ctx context.Context, dateIni, dateEnd t
 
 	// Use the response channel to download and save files
 	responseChan := d.URLResponses(ctx, dateIni, dateEnd, verbose)
-	
+
 	var errors []error
 	for result := range responseChan {
 		if result.Error != nil {
@@ -82,7 +82,7 @@ func (d *GeneralDownloader) DownloadData(ctx context.Context, dateIni, dateEnd t
 		if err := d.saveResponse(result.Response, filepath); err != nil {
 			errors = append(errors, types.NewOMIEError(types.ErrCodeDownload, "failed to save file", err))
 		}
-		
+
 		result.Response.Body.Close()
 	}
 
@@ -96,13 +96,13 @@ func (d *GeneralDownloader) DownloadData(ctx context.Context, dateIni, dateEnd t
 // URLResponses returns a channel of HTTP responses for the date range
 func (d *GeneralDownloader) URLResponses(ctx context.Context, dateIni, dateEnd time.Time, verbose bool) <-chan ResponseResult {
 	resultChan := make(chan ResponseResult)
-	
+
 	go func() {
 		defer close(resultChan)
-		
+
 		// Create a channel for dates
 		dateChan := make(chan time.Time)
-		
+
 		// Create worker pool
 		var wg sync.WaitGroup
 		for i := 0; i < d.config.MaxConcurrent; i++ {
@@ -120,7 +120,7 @@ func (d *GeneralDownloader) URLResponses(ctx context.Context, dateIni, dateEnd t
 				}
 			}()
 		}
-		
+
 		// Send dates to workers
 		go func() {
 			defer close(dateChan)
@@ -132,17 +132,17 @@ func (d *GeneralDownloader) URLResponses(ctx context.Context, dateIni, dateEnd t
 				}
 			}
 		}()
-		
+
 		wg.Wait()
 	}()
-	
+
 	return resultChan
 }
 
 // downloadSingleDate downloads data for a single date with retries
 func (d *GeneralDownloader) downloadSingleDate(ctx context.Context, date time.Time, verbose bool) ResponseResult {
 	url := d.generateURL(date)
-	
+
 	var lastErr error
 	for attempt := 0; attempt <= d.config.MaxRetries; attempt++ {
 		if attempt > 0 {

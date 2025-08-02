@@ -31,11 +31,11 @@ func NewOMIEError(code, message string, err error) *OMIEError {
 
 // Common error codes
 const (
-	ErrCodeDownload     = "DOWNLOAD_ERROR"
-	ErrCodeParse        = "PARSE_ERROR"
-	ErrCodeInvalidDate  = "INVALID_DATE"
-	ErrCodeInvalidData  = "INVALID_DATA"
-	ErrCodeNotFound     = "NOT_FOUND"
-	ErrCodeNetwork      = "NETWORK_ERROR"
-	ErrCodeEncoding     = "ENCODING_ERROR"
+	ErrCodeDownload    = "DOWNLOAD_ERROR"
+	ErrCodeParse       = "PARSE_ERROR"
+	ErrCodeInvalidDate = "INVALID_DATE"
+	ErrCodeInvalidData = "INVALID_DATA"
+	ErrCodeNotFound    = "NOT_FOUND"
+	ErrCodeNetwork     = "NETWORK_ERROR"
+	ErrCodeEncoding    = "ENCODING_ERROR"
 )

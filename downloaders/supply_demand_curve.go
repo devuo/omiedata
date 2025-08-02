@@ -16,7 +16,7 @@ type SupplyDemandCurveDownloader struct {
 func NewSupplyDemandCurveDownloader(hour int) *SupplyDemandCurveDownloader {
 	urlMask := "AGNO_YYYY/MES_MM/TXT/INT_CURVA_ACUM_UO_MIB_1_HH_DD_MM_YYYY_DD_MM_YYYY.TXT"
 	outputMask := "OfferAndDemandCurve_HH_YYYYMMDD.TXT"
-	
+
 	return &SupplyDemandCurveDownloader{
 		GeneralDownloader: NewGeneralDownloader(urlMask, outputMask),
 		hour:              hour,

@@ -1,7 +1,7 @@
 // Package omiedata provides access to OMIE (Iberian Electricity Market Operator) data.
 //
 // This library allows you to download and parse electricity market data from the OMIE website,
-// including marginal prices, energy by technology, supply/demand curves, and intraday prices
+// including marginal prices, energy by technology, and intraday prices
 // for Spain and Portugal.
 //
 // Basic usage example:
@@ -23,24 +23,22 @@ import (
 type (
 	// System types
 	SystemType = types.SystemType
-	
+
 	// Technology types
 	TechnologyType = types.TechnologyType
-	
+
 	// Data types
-	MarginalPriceData    = types.MarginalPriceData
-	TechnologyEnergy     = types.TechnologyEnergy
-	TechnologyEnergyDay  = types.TechnologyEnergyDay
-	MarketPoint          = types.MarketPoint
-	MarketCurve          = types.MarketCurve
-	IntradayPrice        = types.IntradayPrice
-	
+	MarginalPriceData   = types.MarginalPriceData
+	TechnologyEnergy    = types.TechnologyEnergy
+	TechnologyEnergyDay = types.TechnologyEnergyDay
+	IntradayPrice       = types.IntradayPrice
+
 	// Import options
 	ImportOptions = importers.ImportOptions
-	
+
 	// Importers
-	MarginalPriceImporter        = importers.MarginalPriceImporter
-	EnergyByTechnologyImporter   = importers.EnergyByTechnologyImporter
+	MarginalPriceImporter      = importers.MarginalPriceImporter
+	EnergyByTechnologyImporter = importers.EnergyByTechnologyImporter
 )
 
 // System type constants
@@ -52,18 +50,18 @@ const (
 
 // Technology type constants
 const (
-	Coal                = types.Coal
-	FuelGas             = types.FuelGas
-	SelfProducer        = types.SelfProducer
-	Nuclear             = types.Nuclear
-	Hydro               = types.Hydro
-	CombinedCycle       = types.CombinedCycle
-	Wind                = types.Wind
-	ThermalSolar        = types.ThermalSolar
-	PhotovoltaicSolar   = types.PhotovoltaicSolar
-	Residuals           = types.Residuals
-	Import              = types.Import
-	ImportWithoutMIBEL  = types.ImportWithoutMIBEL
+	Coal               = types.Coal
+	FuelGas            = types.FuelGas
+	SelfProducer       = types.SelfProducer
+	Nuclear            = types.Nuclear
+	Hydro              = types.Hydro
+	CombinedCycle      = types.CombinedCycle
+	Wind               = types.Wind
+	ThermalSolar       = types.ThermalSolar
+	PhotovoltaicSolar  = types.PhotovoltaicSolar
+	Residuals          = types.Residuals
+	Import             = types.Import
+	ImportWithoutMIBEL = types.ImportWithoutMIBEL
 )
 
 // Convenience constructor functions

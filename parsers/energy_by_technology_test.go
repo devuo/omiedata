@@ -25,7 +25,7 @@ func TestEnergyByTechnologyParser_ParseFile(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			parser := NewEnergyByTechnologyParser()
 			result, err := parser.ParseFile(tt.filename)
-			
+
 			if tt.wantErr {
 				if err == nil {
 					t.Errorf("expected error but got none")
@@ -58,7 +58,7 @@ func TestEnergyByTechnologyParser_ParseFile(t *testing.T) {
 				t.Errorf("expected 24 hourly records, got %d", len(data.Records))
 			}
 
-			t.Logf("Parsed data for %s (%s system) with %d records", 
+			t.Logf("Parsed data for %s (%s system) with %d records",
 				data.Date.Format("2006-01-02"), data.System, len(data.Records))
 
 			// Validate first hour data (from the test file)
@@ -70,14 +70,14 @@ func TestEnergyByTechnologyParser_ParseFile(t *testing.T) {
 			// Test European number format parsing - these values come from the testdata file
 			// Line: 13/11/2020;1;1.432,0;;;6.088,9;2.405,9;3.191,6;7.371,1;25,7;3,7;6.292,4;;2.400,0;
 			expectedValues := map[string]float64{
-				"Coal":         1432.0,  // 1.432,0
-				"Nuclear":      6088.9,  // 6.088,9  
-				"Hydro":        2405.9,  // 2.405,9
+				"Coal":          1432.0, // 1.432,0
+				"Nuclear":       6088.9, // 6.088,9
+				"Hydro":         2405.9, // 2.405,9
 				"CombinedCycle": 3191.6, // 3.191,6
-				"Wind":         7371.1,  // 7.371,1
-				"SolarThermal": 25.7,    // 25,7
-				"SolarPV":      3.7,     // 3,7
-				"Cogeneration": 6292.4,  // 6.292,4
+				"Wind":          7371.1, // 7.371,1
+				"SolarThermal":  25.7,   // 25,7
+				"SolarPV":       3.7,    // 3,7
+				"Cogeneration":  6292.4, // 6.292,4
 				"ImportNoMIBEL": 2400.0, // 2.400,0
 			}
 
@@ -114,7 +114,7 @@ func TestEnergyByTechnologyParser_ParseFile(t *testing.T) {
 			// Print first few hours for debugging
 			for i := 0; i < 3 && i < len(data.Records); i++ {
 				record := data.Records[i]
-				t.Logf("Hour %d: Nuclear=%.1f, Wind=%.1f, Hydro=%.1f, Coal=%.1f", 
+				t.Logf("Hour %d: Nuclear=%.1f, Wind=%.1f, Hydro=%.1f, Coal=%.1f",
 					record.Hour, record.Nuclear, record.Wind, record.Hydro, record.Coal)
 			}
 
@@ -136,7 +136,7 @@ func TestEnergyByTechnologyParser_EuropeanNumberFormat(t *testing.T) {
 		expected float64
 	}{
 		{"1.432,0", 1432.0},   // thousands.decimal
-		{"6.088,9", 6088.9},   // thousands.decimal  
+		{"6.088,9", 6088.9},   // thousands.decimal
 		{"2.405,9", 2405.9},   // thousands.decimal
 		{"25,7", 25.7},        // decimal only
 		{"3,7", 3.7},          // decimal only
@@ -150,7 +150,7 @@ func TestEnergyByTechnologyParser_EuropeanNumberFormat(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run("parse_"+tc.input, func(t *testing.T) {
 			result, err := ParseFloat(tc.input)
-			
+
 			if tc.input == "" {
 				// Empty string should return NaN
 				if err != nil {
@@ -161,12 +161,12 @@ func TestEnergyByTechnologyParser_EuropeanNumberFormat(t *testing.T) {
 				}
 				return
 			}
-			
+
 			if err != nil {
 				t.Errorf("unexpected error parsing '%s': %v", tc.input, err)
 				return
 			}
-			
+
 			if math.IsNaN(tc.expected) {
 				if !math.IsNaN(result) {
 					t.Errorf("expected NaN, got %f", result)
@@ -182,13 +182,13 @@ func TestEnergyByTechnologyParser_EuropeanNumberFormat(t *testing.T) {
 
 func TestEnergyByTechnologyParser_ColumnMapping(t *testing.T) {
 	parser := NewEnergyByTechnologyParser()
-	
+
 	// Test header line parsing
 	headerLine := "Fecha;Hora;CARBÓN;FUEL-GAS;AUTOPRODUCTOR;NUCLEAR;HIDRÁULICA;CICLO COMBINADO;EÓLICA;SOLAR TÉRMICA;SOLAR FOTOVOLTAICA;COGENERACIÓN/RESIDUOS/MINI HIDRA;IMPORTACIÓN INTER.;IMPORTACIÓN INTER. SIN MIBEL;"
 	fields := SplitCSV(headerLine)
-	
+
 	mapping, _ := parser.parseColumnHeaders([]string{"", "", headerLine})
-	
+
 	expectedMappings := map[int]types.TechnologyType{
 		2:  types.Coal,
 		3:  types.FuelGas,
@@ -203,11 +203,11 @@ func TestEnergyByTechnologyParser_ColumnMapping(t *testing.T) {
 		12: types.Import,
 		13: types.ImportWithoutMIBEL,
 	}
-	
+
 	if len(mapping) != len(expectedMappings) {
 		t.Errorf("expected %d mappings, got %d", len(expectedMappings), len(mapping))
 	}
-	
+
 	for col, expectedTech := range expectedMappings {
 		if actualTech, exists := mapping[col]; !exists {
 			t.Errorf("missing mapping for column %d (%s)", col, fields[col])
