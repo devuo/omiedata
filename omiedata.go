@@ -1,8 +1,7 @@
 // Package omiedata provides access to OMIE (Iberian Electricity Market Operator) data.
 //
 // This library allows you to download and parse electricity market data from the OMIE website,
-// including marginal prices, energy by technology, and intraday prices
-// for Spain and Portugal.
+// including marginal prices and energy by technology for Spain and Portugal.
 //
 // Basic usage example:
 //
@@ -31,7 +30,6 @@ type (
 	MarginalPriceData   = types.MarginalPriceData
 	TechnologyEnergy    = types.TechnologyEnergy
 	TechnologyEnergyDay = types.TechnologyEnergyDay
-	IntradayPrice       = types.IntradayPrice
 
 	// Import options
 	ImportOptions = importers.ImportOptions

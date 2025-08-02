@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) for maintaining and 
 
 ## Overview
 
-This is a Go library that provides access to [OMIE](https://www.omie.es/) (Iberian Electricity Market Operator) data. The library implements parsers and downloaders for various market data types including marginal prices, energy by technology, and intraday prices.
+This is a Go library that provides access to [OMIE](https://www.omie.es/) (Iberian Electricity Market Operator) data. The library implements parsers and downloaders for various market data types including marginal prices and energy by technology.
 
 ## Project Structure
 
@@ -29,7 +29,6 @@ omiedata/
 Each parser implements the `Parser` interface:
 - `MarginalPriceParser`: Parses daily market price files
 - `EnergyByTechnologyParser`: Parses energy generation by technology
-- `IntradayPriceParser`: Parses intraday session prices (planned)
 
 ### Downloaders Package (`downloaders/`)
 Each downloader implements the `Downloader` interface:
@@ -70,7 +69,6 @@ Base URL: `https://www.omie.es/sites/default/files/dados/`
 File patterns:
 - Marginal Price: `AGNO_YYYY/MES_MM/TXT/INT_PBC_EV_H_1_DD_MM_YYYY_DD_MM_YYYY.TXT`
 - Energy by Tech: `AGNO_YYYY/MES_MM/TXT/INT_PBC_TECNOLOGIAS_H_SYS_DD_MM_YYYY_DD_MM_YYYY.TXT`
-- Intraday: `AGNO_YYYY/MES_MM/TXT/INT_PIB_EV_H_1_SS_DD_MM_YYYY_DD_MM_YYYY.TXT`
 
 ## Adding New Features
 
@@ -90,7 +88,6 @@ The `testdata/` directory contains sample files from different time periods:
 - `PMD_20090601.txt` - Transition format
 - `PMD_20221030.txt` - Current format (EUR/MWh)
 - `EnergyByTechnology_9_20201113.TXT` - Technology breakdown
-- `PrecioIntra_2_20090102.txt` - Intraday prices
 
 Run tests:
 ```bash
@@ -153,7 +150,5 @@ golangci-lint run
 
 ## Future Enhancements
 
-Currently planned features:
-- Intraday price parser and importer
 - Additional data types as needed
 - Performance optimizations if required
