@@ -45,71 +45,11 @@ func TestEnergyByTechnologyParser_ParseFile(t *testing.T) {
 			}
 
 			// Validate basic structure
-			expectedDate := time.Date(2020, 11, 13, 0, 0, 0, 0, time.UTC)
-			if !data.Date.Equal(expectedDate) {
-				t.Errorf("expected date %v, got %v", expectedDate, data.Date)
-			}
+			validateBasicStructure(t, data)
 
-			if data.System != types.Iberian {
-				t.Errorf("expected system %v, got %v", types.Iberian, data.System)
-			}
-
-			if len(data.Records) != 24 {
-				t.Errorf("expected 24 hourly records, got %d", len(data.Records))
-			}
-
-			t.Logf("Parsed data for %s (%s system) with %d records",
-				data.Date.Format("2006-01-02"), data.System, len(data.Records))
-
-			// Validate first hour data (from the test file)
+			// Validate first hour data
 			firstHour := data.Records[0]
-			if firstHour.Hour != 1 {
-				t.Errorf("expected hour 1, got %d", firstHour.Hour)
-			}
-
-			// Test European number format parsing - these values come from the testdata file
-			// Line: 13/11/2020;1;1.432,0;;;6.088,9;2.405,9;3.191,6;7.371,1;25,7;3,7;6.292,4;;2.400,0;
-			expectedValues := map[string]float64{
-				"Coal":          1432.0, // 1.432,0
-				"Nuclear":       6088.9, // 6.088,9
-				"Hydro":         2405.9, // 2.405,9
-				"CombinedCycle": 3191.6, // 3.191,6
-				"Wind":          7371.1, // 7.371,1
-				"SolarThermal":  25.7,   // 25,7
-				"SolarPV":       3.7,    // 3,7
-				"Cogeneration":  6292.4, // 6.292,4
-				"ImportNoMIBEL": 2400.0, // 2.400,0
-			}
-
-			// Test that European number format was parsed correctly
-			testValue := func(name string, actual, expected float64) {
-				if math.IsNaN(actual) && !math.IsNaN(expected) {
-					t.Errorf("%s: expected %.1f, got NaN", name, expected)
-				} else if !math.IsNaN(expected) && math.Abs(actual-expected) > 0.1 {
-					t.Errorf("%s: expected %.1f, got %.1f", name, expected, actual)
-				}
-			}
-
-			testValue("Coal", firstHour.Coal, expectedValues["Coal"])
-			testValue("Nuclear", firstHour.Nuclear, expectedValues["Nuclear"])
-			testValue("Hydro", firstHour.Hydro, expectedValues["Hydro"])
-			testValue("CombinedCycle", firstHour.CombinedCycle, expectedValues["CombinedCycle"])
-			testValue("Wind", firstHour.Wind, expectedValues["Wind"])
-			testValue("SolarThermal", firstHour.SolarThermal, expectedValues["SolarThermal"])
-			testValue("SolarPV", firstHour.SolarPV, expectedValues["SolarPV"])
-			testValue("Cogeneration", firstHour.Cogeneration, expectedValues["Cogeneration"])
-			testValue("ImportNoMIBEL", firstHour.ImportNoMIBEL, expectedValues["ImportNoMIBEL"])
-
-			// Test that empty fields are properly handled as NaN
-			if !math.IsNaN(firstHour.FuelGas) {
-				t.Errorf("FuelGas: expected NaN for empty field, got %.1f", firstHour.FuelGas)
-			}
-			if !math.IsNaN(firstHour.SelfProducer) {
-				t.Errorf("SelfProducer: expected NaN for empty field, got %.1f", firstHour.SelfProducer)
-			}
-			if !math.IsNaN(firstHour.ImportInt) {
-				t.Errorf("ImportInt: expected NaN for empty field, got %.1f", firstHour.ImportInt)
-			}
+			validateFirstHourData(t, &firstHour)
 
 			// Print first few hours for debugging
 			for i := 0; i < 3 && i < len(data.Records); i++ {
@@ -118,7 +58,7 @@ func TestEnergyByTechnologyParser_ParseFile(t *testing.T) {
 					record.Hour, record.Nuclear, record.Wind, record.Hydro, record.Coal)
 			}
 
-			// Test that we can calculate renewable energy correctly
+			// Test renewable energy calculation
 			renewable := firstHour.Wind + firstHour.SolarPV + firstHour.SolarThermal + firstHour.Hydro
 			expectedRenewable := 7371.1 + 3.7 + 25.7 + 2405.9 // Sum from testdata
 			if math.Abs(renewable-expectedRenewable) > 0.1 {
@@ -126,6 +66,78 @@ func TestEnergyByTechnologyParser_ParseFile(t *testing.T) {
 			}
 			t.Logf("Hour 1 renewable energy: %.1f MWh", renewable)
 		})
+	}
+}
+
+func validateBasicStructure(t *testing.T, data *types.TechnologyEnergyDay) {
+	expectedDate := time.Date(2020, 11, 13, 0, 0, 0, 0, time.UTC)
+	if !data.Date.Equal(expectedDate) {
+		t.Errorf("expected date %v, got %v", expectedDate, data.Date)
+	}
+
+	if data.System != types.Iberian {
+		t.Errorf("expected system %v, got %v", types.Iberian, data.System)
+	}
+
+	if len(data.Records) != 24 {
+		t.Errorf("expected 24 hourly records, got %d", len(data.Records))
+	}
+
+	t.Logf("Parsed data for %s (%s system) with %d records",
+		data.Date.Format("2006-01-02"), data.System, len(data.Records))
+}
+
+func validateFirstHourData(t *testing.T, firstHour *types.TechnologyEnergy) {
+	if firstHour.Hour != 1 {
+		t.Errorf("expected hour 1, got %d", firstHour.Hour)
+	}
+
+	// Test European number format parsing - these values come from the testdata file
+	// Line: 13/11/2020;1;1.432,0;;;6.088,9;2.405,9;3.191,6;7.371,1;25,7;3,7;6.292,4;;2.400,0;
+	expectedValues := map[string]float64{
+		"Coal":          1432.0, // 1.432,0
+		"Nuclear":       6088.9, // 6.088,9
+		"Hydro":         2405.9, // 2.405,9
+		"CombinedCycle": 3191.6, // 3.191,6
+		"Wind":          7371.1, // 7.371,1
+		"SolarThermal":  25.7,   // 25,7
+		"SolarPV":       3.7,    // 3,7
+		"Cogeneration":  6292.4, // 6.292,4
+		"ImportNoMIBEL": 2400.0, // 2.400,0
+	}
+
+	testValue := func(name string, actual, expected float64) {
+		if math.IsNaN(actual) && !math.IsNaN(expected) {
+			t.Errorf("%s: expected %.1f, got NaN", name, expected)
+		} else if !math.IsNaN(expected) && math.Abs(actual-expected) > 0.1 {
+			t.Errorf("%s: expected %.1f, got %.1f", name, expected, actual)
+		}
+	}
+
+	// Test each value
+	testValue("Coal", firstHour.Coal, expectedValues["Coal"])
+	testValue("Nuclear", firstHour.Nuclear, expectedValues["Nuclear"])
+	testValue("Hydro", firstHour.Hydro, expectedValues["Hydro"])
+	testValue("CombinedCycle", firstHour.CombinedCycle, expectedValues["CombinedCycle"])
+	testValue("Wind", firstHour.Wind, expectedValues["Wind"])
+	testValue("SolarThermal", firstHour.SolarThermal, expectedValues["SolarThermal"])
+	testValue("SolarPV", firstHour.SolarPV, expectedValues["SolarPV"])
+	testValue("Cogeneration", firstHour.Cogeneration, expectedValues["Cogeneration"])
+	testValue("ImportNoMIBEL", firstHour.ImportNoMIBEL, expectedValues["ImportNoMIBEL"])
+
+	// Test that empty fields are properly handled as NaN
+	validateEmptyFields(t, firstHour)
+}
+
+func validateEmptyFields(t *testing.T, firstHour *types.TechnologyEnergy) {
+	if !math.IsNaN(firstHour.FuelGas) {
+		t.Errorf("FuelGas: expected NaN for empty field, got %.1f", firstHour.FuelGas)
+	}
+	if !math.IsNaN(firstHour.SelfProducer) {
+		t.Errorf("SelfProducer: expected NaN for empty field, got %.1f", firstHour.SelfProducer)
+	}
+	if !math.IsNaN(firstHour.ImportInt) {
+		t.Errorf("ImportInt: expected NaN for empty field, got %.1f", firstHour.ImportInt)
 	}
 }
 

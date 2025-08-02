@@ -152,3 +152,7 @@ golangci-lint run
 
 - Additional data types as needed
 - Performance optimizations if required
+
+## Best Practices
+
+- Use gocyclo (go tool gocyclo -over=15 .) to find and fix code with high complexity
