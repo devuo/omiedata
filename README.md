@@ -1,4 +1,4 @@
-# OMIEData Go Library
+# OMIEData
 
 A Go library for accessing electricity market data from [OMIE](https://www.omie.es/) (Iberian Peninsula's Electricity Market Operator). This library provides data access for daily market (hourly prices, energy by technology) and intra-day market data for Spain and Portugal.
 
