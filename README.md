@@ -1,5 +1,8 @@
 # OMIEData
 
+[![Go Reference](https://pkg.go.dev/badge/github.com/devuo/omiedata.svg)](https://pkg.go.dev/github.com/devuo/omiedata)
+[![Go Report Card](https://goreportcard.com/badge/github.com/devuo/omiedata)](https://goreportcard.com/report/github.com/devuo/omiedata)
+
 A Go library for accessing electricity market data from [OMIE](https://www.omie.es/) (Iberian Peninsula's Electricity Market Operator). This library provides data access for daily market prices and energy by technology for Spain and Portugal.
 
 This is a Go port of the [OMIEData Python library](https://github.com/acruzgarcia/OMIEData).
