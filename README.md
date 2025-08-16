@@ -224,11 +224,13 @@ See the [examples](./examples/) directory for complete working examples:
 
 - [`marginal-price/`](./examples/marginal-price/) - Basic price data import
 - [`energy-by-technology/`](./examples/energy-by-technology/) - Technology breakdown analysis
+- [`average-price/`](./examples/average-price/) - Calculate average PT price for a date range
 
 Run examples:
 ```bash
 go run ./examples/marginal-price
 go run ./examples/energy-by-technology
+go run ./examples/average-price -start 01-01-2024 -end 03-01-2024
 ```
 
 ## Testing

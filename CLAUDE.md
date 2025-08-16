@@ -127,10 +127,12 @@ go tool cover -html=coverage.out
 # Run examples
 go run ./examples/marginal-price
 go run ./examples/energy-by-technology
+go run ./examples/average-price -start 01-01-2024 -end 03-01-2024
 
 # Build examples (optional)
 go build ./examples/marginal-price
 go build ./examples/energy-by-technology
+go build ./examples/average-price
 
 # Format code
 go fmt ./...
